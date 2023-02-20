@@ -1,0 +1,114 @@
+{
+  "persons": [
+    {
+      "id": 1,
+      "userName": "admin",
+      "password": "admin",
+      "firstName": "Amr",
+      "lastName": "Allam",
+      "type": "admin",
+      "email": ""
+    },
+    {
+      "id": 2,
+      "userName": "security",
+      "password": "security",
+      "firstName": "Amr",
+      "lastName": "Allam",
+      "type": "security",
+      "email": ""
+    },
+    {
+      "id": 4,
+      "userName": "IslamHamza1512",
+      "password": "TZpmm0aUJs",
+      "firstName": "Islam",
+      "lastName": "Hamza",
+      "age": "26",
+      "email": "islamHamza@yahoo.com",
+      "address": "Mansoura-Elmakwaf Elkadeem",
+      "type": "employee",
+      "lastAttended": "1-25-2023",
+      "employeeStatus": false
+    },
+    {
+      "id": 5,
+      "userName": "MohamedIbrahim7992",
+      "password": "gfi1aosSVo",
+      "firstName": "Mohamed",
+      "lastName": "Ibrahim",
+      "age": "26",
+      "email": "mohamedibrahim@gmail.com",
+      "address": "Domyat",
+      "type": "employee",
+      "lastAttended": "1-25-2023",
+      "employeeStatus": false
+    },
+    {
+      "id": 6,
+      "userName": "AmrAllam0072",
+      "password": "qKRxx7PhOL",
+      "firstName": "Amr",
+      "lastName": "Allam",
+      "age": "24",
+      "email": "amr.i.allam@hotmail.com",
+      "address": "Tanta - El-Gomla",
+      "type": "employee",
+      "lastAttended": "1-25-2023",
+      "employeeStatus": false
+    },
+    {
+      "id": 7,
+      "userName": "MohamedAli3181",
+      "password": "eJh8XPu4dx",
+      "firstName": "Mohamed",
+      "lastName": "Ali",
+      "age": "24",
+      "email": "mahmoudalimenyawy@gmail.com",
+      "address": "Mansoura-Gala2",
+      "type": "employee",
+      "lastAttended": "1-25-2023",
+      "employeeStatus": false
+    },
+    {
+      "id": 8,
+      "userName": "AmrAllam0530",
+      "password": "DWTtKm4aOt",
+      "firstName": "Amr",
+      "lastName": "Allam",
+      "age": "24",
+      "email": "asdasd@gmail.com",
+      "address": "asdsad",
+      "type": "security",
+      "lastAttended": "1-25-2023",
+      "employeeStatus": false
+    }
+  ],
+  "attendence": [
+    {
+      "id": 1,
+      "userId": "4",
+      "date": "1-25-2023",
+      "inDate": "9:25:02 PM",
+      "attendState": "Late",
+      "outDate": "9:25:07 PM"
+    },
+    {
+      "id": 2,
+      "userId": "5",
+      "date": "1-25-2023",
+      "inDate": "9:25:04 PM",
+      "attendState": "Late",
+      "outDate": "3:30:00 PM"
+    },
+    {
+      "id": 3,
+      "userId": "6",
+      "date": "1-25-2023",
+      "inDate": "9:25:06 PM",
+      "attendState": "Late",
+      "outDate": "9:25:11 PM"
+    }
+  ],
+  "pending": []
+}
