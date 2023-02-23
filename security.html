@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security</title>
+    
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/styling.css">
+
+    <link rel="stylesheet" href="css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="css/semantic.min.css">
+    <link rel="stylesheet" href="css/responsive.dataTables.min.css">
+
+    <script src="js/aes.js"></script>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.semanticui.min.js"></script>
+    <script src="js/semantic.min.js"></script>
+    <script src="js/sweetalert.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/dataTables.responsive.min.js"></script>
+    <script src="js/security.js" type="module"></script>
+</head>
+<body>
+    <div id="navDiv" class="row justify-content-evenly justify-content-md-around p-1 bg-primary">
+        <div class="col col-md-1 text-start d-none d-md-flex p-2 lh-base">
+            <span class="fs-4 text-light fw-bold">Welcome,</span>
+            <span id="userName" class="fs-4 text-light fw-bolder mx-1"></span>
+        </div>
+        <h2 class="col col-md-9 text-start p-2 text-light text-md-center">Security Panel</h2>
+        <div class="col col-md-1 text-end p-2 lh-base"><button id="logoutButton" class="btn btn-light text-primary fw-bold">Logout</button></div>
+    </div>
+    <div id="mainWrapper" class="d-flex flex-column mt-3 align-items-center">
+        <div id="tbody" class="col-11">
+            <table id="tableJqueryID" class="ui celled table text-center">
+                <thead>
+                    <tr class="fw-bold">
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody class="fw-lighter emptyFlag">
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th></th> 
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

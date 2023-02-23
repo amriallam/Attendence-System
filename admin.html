@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/styling.css">
+    <link rel="shortcut icon" type="image" href="./img/ITI.svg">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="css/semantic.min.css">
+    <link rel="stylesheet" href="css/responsive.dataTables.min.css">
+
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.semanticui.min.js"></script>
+    <script src="js/semantic.min.js"></script>
+    <script src="js/sweetalert.js"></script>
+    <script src="js/litepicker.js"></script>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/aes.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="js/email.min.js"></script>
+    <script>(function(){emailjs.init("iLJ_hLZrNN1kBLX2P");})();</script>
+    <script src="js/admin.js" type="module" defer></script>
+</head>
+<body>
+<div class="row">
+    <div class="col-md-12" style="height: 100vh;">
+        <div>
+            <div id="navDiv" class="row justify-content-evenly justify-content-md-around p-1 bg-primary">
+                <div class="col col-md-1 text-start d-none d-md-flex p-2 lh-base">
+                    <span class="fs-4 text-light fw-bold">Welcome,</span>
+                    <span id="userName" class="fs-4 text-light fw-bolder mx-1"></span>
+                </div>
+                <h2 class="col col-md-9 text-start p-2 text-light text-md-center">Admin Panel</h2>
+                <div class="col col-md-1 text-end p-2 lh-base"><button id="logoutButton" class="btn btn-light text-primary fw-bold">Logout</button></div>
+            </div>
+            <div class="row p-1 px-5 mt-1">
+                <div class="col-12 admin-reports reports">
+                    <ul class="nav nav-tabs mb-2" id="reportsTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark active" id="pendingpersons-tab" href="#" role="tab">
+                                Pending Requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" id="latereport-tab" href="#"
+                                role="tab">Late Report</a>
+                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" id="absencereport-tab" href="#"
+                                role="tab">Absence Report</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" id="fullreport-tab" href="#"
+                                role="tab">Full Report</a>
+                        </li>  
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" id="employeesdata-tab" href="#"
+                                role="tab">Employees Data</a>
+                        </li>   
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" id="report-tab" href="#"
+                                role="tab">Custom Report</a>
+                        </li>   
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="admittable" role="tabpanel" aria-labelledby="allemps-tab">
+                            <table id="admitTable" class="ui table table-hover celled text-center">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Age</th>
+                                        <th>Email</th>
+                                        <th>Address</th>
+                                        <th>Type</th>
+                                        <th>Pending</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="fw-lighter emptyFlag">
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Age</th>
+                                        <th>Email</th>
+                                        <th>Address</th>
+                                        <th>Type</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="latereport" role="tabpanel" aria-labelledby="latereport-tab">
+                            <table id="lateReport" class="ui table table-hover celled text-center">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Date</th>
+                                        <th>Logged In</th>
+                                        <th>Logged Out</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Date</th>
+                                        <th>Logged In</th>
+                                        <th>Logged Out</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="absencereport" role="tabpanel" aria-labelledby="absencereport-tab">
+                            <table id="absenceReport" class="ui table table-hover celled text-center">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Date</th>
+                                        <th>Logged In</th>
+                                        <th>Logged Out</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Date</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="fullreport" role="tabpanel" aria-labelledby="fullreport-tab">
+                            <table id="ReportTable" class="ui table table-hover celled text-center">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Date</th>
+                                        <th>Logged In</th>
+                                        <th>Logged Out</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Date</th>
+                                        <th>Logged In</th>
+                                        <th>Logged Out</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>  
+                        <div class="tab-pane" id="employeesdata" role="tabpanel" aria-labelledby="fullreport-tab">
+                            <table id="employeesData" class="ui table table-hover celled text-center">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Age</th>
+                                        <th>E-Mail Address</th>
+                                        <th>Address</th>
+                                        <th>Last Attended</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Age</th>
+                                        <th>E-Mail Address</th>
+                                        <th>Address</th>
+                                        <th>Last Attended</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div> 
+                        <div class="tab-pane" id="reportdata" role="tabpanel" aria-labelledby="fullreport-tab">
+                            <div class="d-flex flex-column flex-md-row justify-content-center align-content-center"> 
+                                <div class="col d-flex flex-column text-center my-1 justify-content-center">
+                                    <div>
+                                        <input id="textOfReportData" type="text" class="searchStyle col-4" placeholder="Enter id or Email of the Employee ">
+                                        <button id="IdOfReportData" class="rounded-2 mx-2 p-2 btn-primary shadow-none">Get Report</button>
+                                    </div>
+                                    <div class="my-2">
+                                        <span id="errorOfReport" class="text-danger d-none">Check your input again</span>
+                                        <span id="notFoundOfReport" class="text-danger d-none">No such record</span>
+                                    </div>
+                                </div>
+                                <div id="reportSideSection" class="col d-flex flex-wrap text-center d-none">
+                                    <div class="col-12 col-md-6 px-1">
+                                        <label class="col-12" for="reportFirstName">First Name</label>
+                                        <input disabled class="col-12 bg-primary text-light searchStyle" type="text" id="reportFirstName">
+                                    </div>
+                                    <div class="col-12 col-md-6 px-1">
+                                        <label class="col-12" for="reportLastName">Last Name</label>
+                                        <input disabled class="col-12 bg-primary text-light searchStyle" type="text" id="reportLastName">
+                                    </div>
+                                    <div class="col-12 col-md-2 my-2">
+                                        <label class="col-12" for="reportID">ID</label>
+                                        <input disabled class="col-12 bg-primary text-light searchStyle" type="text" id="reportID">
+                                    </div>
+                                    <div class="col-12 col-md-7 mx-auto my-2">
+                                        <label class="col-12" for="reportEmail">Email</label>
+                                        <input disabled class="col-12 bg-primary text-light searchStyle" type="text" id="reportEmail">
+                                    </div>
+                                    <div class="col-12 col-md-2 my-2">
+                                        <label class="col-12" for="reportAge">Age</label>
+                                        <input disabled class="col-12 bg-primary text-light searchStyle" type="text" id="reportAge">
+                                    </div>
+                                    <div class="col-12 col-md-12 my-2"> 
+                                        <label class="col-12" for="reportAddress">Address</label>
+                                        <input disabled class="col-12 bg-primary text-light searchStyle" type="text" id="reportAddress">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="secondInReport" class="d-flex justify-content-center align-content-center d-none">
+                                <div class="col-12 d-flex flex-column text-center my-1 justify-content-center">
+                                    <div class="col-12 my-2">
+                                        <label class="col-12" for="reportTotal">Total</label>
+                                        <input disabled class="col-12 bg-primary text-light searchStyle" type="text" id="reportTotal">
+                                    </div>
+                                    <div class="col-12 my-2">
+                                        <label class="col-12" for="reportOnTime">On Time</label>
+                                        <input disabled class="col-12 bg-primary text-light searchStyle" type="text" id="reportOnTime">
+                                    </div>
+                                    <div class="col-12 my-2">
+                                        <label class="col-12" for="reportLate">Late</label>
+                                        <input disabled class="col-12 bg-primary text-light searchStyle" type="text" id="reportLate">
+                                    </div>
+                                    <div class="col-12 my-2">
+                                        <label class="col-12" for="reportAbscent">Abscent</label>
+                                        <input disabled class="col-12 bg-primary text-light searchStyle" type="text" id="reportAbscent">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
