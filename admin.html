@@ -19,17 +19,30 @@
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="js/jquery.dataTables.min.js"></script>
     <script src="js/dataTables.semanticui.min.js"></script>
+    <script src="js/dataTables.responsive.min.js"></script>
     <script src="js/semantic.min.js"></script>
     <script src="js/sweetalert.js"></script>
     <script src="js/litepicker.js"></script>
 
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/aes.js"></script>
-    <script src="js/moment.min.js"></script>
     <script src="js/email.min.js"></script>
     <script>(function(){emailjs.init("iLJ_hLZrNN1kBLX2P");})();</script>
     <script src="js/admin.js" type="module" defer></script>
 </head>
+<script>
+      if (
+    !localStorage.getItem("userInfo") ||
+    JSON.parse(
+      CryptoJS.AES.decrypt(localStorage.userInfo, "AmrAllam").toString(
+        CryptoJS.enc.Utf8
+      )
+    )["type"] != 'admin'
+  ) {
+    alert("You have no access");
+    location.assign("http://127.0.0.1:5500/homepage.html");
+  }
+</script>
 <body>
 <div class="row">
     <div class="col-md-12" style="height: 100vh;">
@@ -58,6 +71,10 @@
                                 role="tab">Absence Report</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" id="excuse-tab" href="#"
+                                role="tab">Excuse Report</a>
+                        </li> 
+                        <li class="nav-item">
                             <a class="nav-link text-dark" id="fullreport-tab" href="#"
                                 role="tab">Full Report</a>
                         </li>  
@@ -68,7 +85,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" id="report-tab" href="#"
                                 role="tab">Custom Report</a>
-                        </li>   
+                        </li>     
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="admittable" role="tabpanel" aria-labelledby="allemps-tab">
@@ -272,6 +289,36 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="tab-pane" id="excusereport" role="tabpanel" aria-labelledby="excusereport-tab">
+                            <table id="excuseReport" class="ui table table-hover celled text-center">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Date</th>
+                                        <th>Logged In</th>
+                                        <th>Logged Out</th>
+                                        <th>Excuse</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Date</th>
+                                        <th>Logged In</th>
+                                        <th>Logged Out</th>
+                                        <th>Excuse</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
                 </div>

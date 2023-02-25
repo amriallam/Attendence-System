@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    
+    <link rel="stylesheet" href="css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="css/semantic.min.css">
+    <link rel="shortcut icon" type="image" href="./img/ITI.svg">
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/homepage.css">
+
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.semanticui.min.js"></script>
+    <script src="js/semantic.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/aes.js"></script>
+    <script src="js/dataTables.responsive.min.js"></script>
+    <script src="js/homepage.js" type="module"></script>
+</head>
+<body>
+    <div id="mainWrapper" class="row justify-content-center align-items-center rounded-2 flex-column flex-lg-row">
+        <div class="col-2">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="-217.3 -347.5 1416.1 1416.1" enable-background="new -217.3 -347.5 1416.1 1416.1" xml:space="preserve">
+            <circle fill="#127BF9" cx="490.8" cy="360.6" r="708.1"/>
+            <g>
+            <path fill="#FFFFFF" d="M197.9-195.6c-35.7,9.7-58.7,45.8-51.6,81.1c4.9,24.1,18.7,41.7,41,52.1c8.3,3.9,18.1,5.9,29.2,5.9
+            c19,0,35.4-6.9,49.4-21c13-13,19.6-27.4,20.7-45.5c1.3-20.1-6.4-40.3-20.7-54.3c-9.5-9.4-22.3-16.4-34.8-19.1
+            C223.1-198.1,205.5-197.7,197.9-195.6z"/>
+            <path fill="#FFFFFF" d="M154.2-25.6c-2.9,0.5-6,1.1-6.8,1.5c-1.4,0.5-1.5,32.9-1.2,303.3l0.2,302.8l2.3,9.7
+            c6.7,29,19.1,51.7,39.2,71.8c25.1,25.2,56.3,39.4,93.7,43c6.1,0.5,11.8,0.7,12.7,0.4c1.5-0.6,1.6-20.2,1.6-227.5V252.5h60h60v219.7
+            c0,133.6,0.4,223.7,1,229.8c3.6,37.6,17.6,67.2,43.9,93.6c27.3,27.3,58.5,41.3,98.9,44.4l7.2,0.5v-294v-294h131.5h131.5v-73v-73
+            H563H296l-0.6-5.8c-2.8-26.5-7.5-42.3-18.3-60.7c-22.8-39-63.8-64.6-105.7-66C164.8-26.2,157-26,154.2-25.6z M771.1,128.5
+            c18.8,5.8,34.6,23.8,37.8,43.1c3.2,19.1-3,37.3-17.2,50.4c-21.9,20.3-54.7,19.2-75.2-2.5c-17.5-18.6-20.5-45.1-7.4-66.7
+            c6.6-10.8,18.8-20.6,30.2-24.3C747.8,125.8,762.5,125.8,771.1,128.5z"/>
+            <path fill="#FFFFFF" d="M683.9,608.1v310.6l9.3-0.7c41.1-3,79-22.5,103.8-53.3c11.6-14.4,18.9-27.9,24.9-46.1
+            c7.5-22.7,7-2.4,7-275.8V297.5h-72.5h-72.5V608.1z"/>
+            </g>
+            </svg>
+        </div>
+        <div id="HomeWrapper" class="d-flex flex-column justify-content-center align-items-center col-lg-4">
+            <p class="fw-bold fs-1 text-primary">Welcome to ITI</p>
+            <button id="home_signUpButton" class="col-8 shadow-none p-1 rounded-2 btn-primary my-1">Signup</button>
+            <button id="home_logInButton"  class="col-8 shadow-none p-1 rounded-2 btn-primary">Login</button>
+        </div>
+        <div id="LogInWrapper" class="d-flex justify-content-center align-items-center col-lg-4 text-center flex-wrap d-none">
+            <p class="fw-bold fs-1 col-12 text-primary">Log in</p>
+            <div class="col-8 row ">
+                <input class="col-12 text-center my-2 form-control" type="text" name="name" placeholder="Username">
+            </div>
+            <div class="col-8 row ">
+                <input class="col-12 text-center my-2 form-control" type="password" name="name" placeholder="Password"> 
+            </div>
+            <div class="col-8 row  gap-2">
+                <div>
+                    <button id="login_login" class="col-12 shadow-none p-1 rounded-2 btn-primary">Login</button>
+                </div>
+                <div>
+                    <button id="login_backButton" class="col-12 shadow-none p-1 rounded-2 btn-primary">Back</button>
+                </div>
+            </div>
+            <div class="col-8 row  mt-2">
+                <span id="errorMsg" class="d-none text-danger">Incorrect username or password</span>
+                <span id="successMsg" class="d-none text-success">Successfuly Logged in! Redirecting</span>
+            </div>
+        </div>  
+        <div id="SignUpWrapper" class="d-flex justify-content-center align-items-center col-lg-4 text-center flex-wrap d-none">
+            <p class="fw-bold fs-1 col-12 text-primary">Sign Up</p>
+            <div class="col-8 row ">
+                <input class="text-center my-2 form-control" type="text" name="name" placeholder="Enter Your First Name" data-toggle="tooltip" data-placement="right" title="3-8 charachter , a-z A-z only allowed">
+            </div>
+            <div class="col-8 row ">
+                <input class="text-center my-2 form-control" type="text" name="name" placeholder="Enter Your Last Name" data-toggle="tooltip" data-placement="right" title="3-8 charachter , a-z A-z only allowed">
+            </div>
+            <div class="col-8 row ">
+                <input class="text-center my-2 form-control" type="number" min="18" max="40" name="name" placeholder="Enter Your Age" data-toggle="tooltip" data-placement="right" title="Age must be between 18 and 40">
+            </div>
+            <div class="col-8 row ">
+                <input class="text-center my-2 form-control" type="text" name="name" placeholder="Enter Your Email" data-toggle="tooltip" data-placement="right" title="Enter a valid email address">
+            </div>
+            <div class="col-8 row ">
+                <input class="text-center my-2 form-control" type="text" name="name" placeholder="Enter Your Address" data-toggle="tooltip" data-placement="right" title="Enter a valid address">
+            </div>
+            <div id="checkBoxDiv" class="my-1 mb-2 col-8 py-2 rounded-3" data-toggle="tooltip" data-placement="right" title="You must select one">
+                <input id="employeeCheckBox" type="radio" name="personType" value="employee">
+                <label for="employeeCheckBox">Employee</label>
+                <input id="securityCheckBox" type="radio" name="personType" value="security">
+                <label for="securityCheckBox">Security</label>
+            </div>
+            <div class="col-12 row justify-content-center align-items-center">
+                <div>
+                    <button id="signup_signUp"      class="col-4 shadow-none p-1 rounded-2 mb-lg-2 mb-1 btn-primary">Sign Up</button>
+                    <button id="signup_clearButton" class="col-4 shadow-none p-1 rounded-2 mb-lg-2 mb-1 btn-danger">Clear</button>
+                </div>
+                <div>
+                    <button id="signup_backButton" class="col-8 shadow-none p-1 rounded-2 btn-primary">Back</button>
+                </div>
+            </div>
+            <div class="mt-2">
+                <span id="alreadyInUse" class="d-none text-danger">Email Already in Use!</span>
+                <span id="alreadyPending" class="d-none text-success">You've Already registered. Wait for admin to approve you</span>
+                <span id="successRegisterMsg" class="d-none">Registered Successfuly! Redirecting <div class="mx-1 spinner-border text-primary col-6" role="status"></div>
+                </span>
+            </div>
+        </div>  
+    </div>
+</body>
+</html>

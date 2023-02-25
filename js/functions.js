@@ -83,7 +83,7 @@ function getAttendenceStatus() {
   var today = new Date();
   if (today.getHours() - 8 > 0) {
     return "Late";
-  } else if (today.getHours() == new 8()) {
+  } else if (today.getHours() == 8) {
     if (today.getMinutes() - 30 > 0) {
       return "Late";
     }
@@ -101,7 +101,7 @@ function logoutButtonAddEvent() {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("userInfo");
-        location.replace("../hompage.html");
+        location.replace("../homepage.html");
       }
     });
   });
@@ -128,7 +128,258 @@ function addSearchBox(tableID, stats = true) {
 function tableStyleFunction(tableID) {
   let table = [];
   let i = 0;
-  table[i] = $(`#${tableID}`).DataTable();
+  table[i] = $(`#${tableID}`).DataTable({
+    autoWidth: false,
+    responsive: true,
+  });
+  if (tableID == "admitTable") {
+    $(`#${tableID}`).on(
+      "click",
+      "tbody ul.dtr-details li:last span.dtr-data i:first",
+      (e) => {
+        let selectedElement = $(`#${tableID} tbody`)
+          .children("tr")
+          .eq(
+            `${e.target.parentElement.parentElement.getAttribute(
+              "data-dt-row"
+            )}`
+          )
+          .children("td");
+        Swal.fire({
+          title: `Are you sure you want to admit ${selectedElement
+            .eq(1)
+            .text()} ${selectedElement.eq(2).text()}`,
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, Admit!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire({
+              title: "Sending E-Mail...",
+              timer: 10000,
+              didOpen: () => {
+                Swal.showLoading();
+                const b = Swal.getHtmlContainer().querySelector("b");
+                timerInterval = setInterval(() => {
+                  b.textContent = Swal.getTimerLeft();
+                }, 100);
+              },
+            });
+            let objSent = {
+              id: "",
+              userName: generateUsername(
+                selectedElement.eq(1).text(),
+                selectedElement.eq(2).text()
+              ),
+              password: generatePassword(),
+              firstName:
+                selectedElement.eq(1).text() || $("[data-dtr-index=1]").text(),
+              lastName:
+                selectedElement.eq(2).text() || $("[data-dtr-index=2]").text(),
+              age:
+                selectedElement.eq(3).text() || $("[data-dtr-index=3]").text(),
+              email:
+                selectedElement.eq(4).text() || $("[data-dtr-index=4]").text(),
+              address:
+                selectedElement.eq(5).text() || $("[data-dtr-index=5]").text(),
+              type:
+                selectedElement.eq(6).text().toLowerCase() ||
+                $("[data-dtr-index=6]").text().toLowerCase(),
+              lastAttended: new Date()
+                .toLocaleDateString()
+                .replaceAll("/", "-"),
+              employeeStatus: false,
+            };
+            let idOfPerson = selectedElement.eq(0).text();
+            SendEmail(objSent).then(() => {
+              AppendToPersons(objSent).then(() => {
+                DeleteFromPending(idOfPerson).then(() => {
+                  console.log("Done");
+                });
+              });
+            });
+          }
+        });
+      }
+    );
+    $(`#${tableID}`).on(
+      "click",
+      "tbody ul.dtr-details li:last span.dtr-data i:last",
+      (e) => {
+        let selectedElement = $(`#${tableID} tbody`)
+          .children("tr")
+          .eq(
+            `${e.target.parentElement.parentElement.getAttribute(
+              "data-dt-row"
+            )}`
+          )
+          .children("td");
+        Swal.fire({
+          title: `Are you sure you want to delete ${selectedElement
+            .eq(1)
+            .text()} ${selectedElement.eq(2).text()}`,
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, Delete!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            fetch(
+              `http://localhost:3000/pending/${selectedElement.eq(0).text()}`,
+              {
+                method: "DELETE",
+              }
+            );
+          }
+        });
+      }
+    );
+  }
+  if (tableID == "tableJqueryID") {
+    $(`#${tableID}`).on(
+      "click",
+      "tbody ul.dtr-details li:last span.dtr-data i:first",
+      (e) => {
+        let selectedElement = $(`#${tableID} tbody`)
+          .children("tr")
+          .eq(
+            `${e.target.parentElement.parentElement.getAttribute(
+              "data-dt-row"
+            )}`
+          )
+          .children("td");
+        Swal.fire({
+          title: "Are you sure?",
+          text: `Attend ${selectedElement.eq(1).text()} ${selectedElement
+            .eq(2)
+            .text()}?`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, Attend!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            fetch(
+              `http://localhost:3000/persons/${selectedElement.eq(0).text()}`,
+              {
+                method: "PATCH",
+                body: JSON.stringify({
+                  lastAttended: new Date()
+                    .toLocaleDateString()
+                    .replaceAll("/", "-"),
+                  employeeStatus: true,
+                }),
+                headers: {
+                  "Content-type": "application/json; charset=UTF-8",
+                },
+              }
+            ).then(() => {
+              fetch(`http://localhost:3000/attendence`, {
+                method: "POST",
+                body: JSON.stringify({
+                  id: "",
+                  userId: selectedElement.eq(0).text().innerText,
+                  date: new Date().toLocaleDateString().replaceAll("/", "-"),
+                  inDate: new Date().toLocaleTimeString(),
+                  attendState: getAttendenceStatus(),
+                  outDate: new Date(
+                    "2022-09-20T15:30:00.000"
+                  ).toLocaleTimeString(),
+                }),
+                headers: {
+                  "Content-type": "application/json; charset=UTF-8",
+                },
+              });
+            });
+          }
+        });
+      }
+    );
+    $(`#${tableID}`).on(
+      "click",
+      "tbody ul.dtr-details li:last span.dtr-data i:last",
+      (e) => {
+        let selectedElement = $(`#${tableID} tbody`)
+          .children("tr")
+          .eq(
+            `${e.target.parentElement.parentElement.getAttribute(
+              "data-dt-row"
+            )}`
+          )
+          .children("td");
+        Swal.fire({
+          title: "Are you sure?",
+          text: `Sign Out ${selectedElement.eq(1).text()} ${selectedElement
+            .eq(2)
+            .text()}?`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, Sign Out!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            fetch(
+              `http://localhost:3000/persons/${selectedElement.eq(0).text()}`,
+              {
+                method: "PATCH",
+                body: JSON.stringify({
+                  employeeStatus: false,
+                  lastAttended: new Date()
+                    .toLocaleDateString()
+                    .replaceAll("/", "-"),
+                }),
+                headers: {
+                  "Content-type": "application/json; charset=UTF-8",
+                },
+              }
+            ).then(() => {
+              fetch(
+                `http://localhost:3000/attendence?date=${new Date()
+                  .toLocaleDateString()
+                  .replaceAll("/", "-")}&userId=${selectedElement.eq(0).text()}`
+              )
+                .then((data) => data.json())
+                .then((foundObject) => {
+                  let newObject = {
+                    outDate: new Date().toLocaleTimeString(),
+                  };
+                  if (
+                    newObject.outDate.getHours() < 15 ||
+                    (newObject.outDate.getHours() == 15 &&
+                      newObject.outDate.getMinutes() < 30)
+                  ) {
+                    var minutesDifference = Math.abs(
+                      new Date().getTime() - new Date().setHours(15, 30)
+                    );
+                    var minutes = Math.floor(minutesDifference / 1000 / 60);
+                    newObject.excuse = `${Math.floor(minutes / 60)}H:${
+                      minutes - Math.floor(minutes / 60) * 60
+                    }M`;
+                  }
+                  fetch(
+                    `http://localhost:3000/attendence/${foundObject[0]["id"]}`,
+                    {
+                      method: "PATCH",
+                      headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                      },
+                      body: JSON.stringify({ newObject }),
+                    }
+                  );
+                });
+            });
+          }
+        });
+      }
+    );
+  }
   $(`#${tableID}_filter`).detach();
   table[i].columns().every(function () {
     var dataTableCol = this;
@@ -139,19 +390,6 @@ function tableStyleFunction(tableID) {
       });
   });
   i++;
-}
-export function checkAuthorization(privilege) {
-  if (
-    !localStorage.getItem("userInfo") ||
-    JSON.parse(
-      CryptoJS.AES.decrypt(localStorage.userInfo, "AmrAllam").toString(
-        CryptoJS.enc.Utf8
-      )
-    )["type"] != privilege
-  ) {
-    alert("You have no access");
-    location.assign("http://127.0.0.1:5500/hompage.html");
-  }
 }
 function removeSortingFromLast(tableID) {
   $(`#${tableID} thead th`)
@@ -198,6 +436,11 @@ export function switchTaps() {
         $("#reportdata").addClass("active");
         break;
       }
+      case "excuse-tab": {
+        $(".tab-pane").removeClass("active");
+        $("#excusereport").addClass("active");
+        break;
+      }
     }
   });
 }
@@ -208,11 +451,11 @@ function addName() {
     )
   )["firstName"];
   switch (
-  JSON.parse(
-    CryptoJS.AES.decrypt(localStorage.userInfo, "AmrAllam").toString(
-      CryptoJS.enc.Utf8
-    )
-  )["type"]
+    JSON.parse(
+      CryptoJS.AES.decrypt(localStorage.userInfo, "AmrAllam").toString(
+        CryptoJS.enc.Utf8
+      )
+    )["type"]
   ) {
     case "admin": {
       document.title = "Admin | " + userName.innerText;
@@ -238,35 +481,33 @@ export function securityUpdateData() {
           new Date(element["lastAttended"]).getTime() !=
           new Date(today).getTime()
         ) {
-          {
-            if (
-              (new Date(element["lastAttended"]).getTime() -
-                new Date(today).getTime()) /
+          if (
+            (new Date(element["lastAttended"]).getTime() -
+              new Date(today).getTime()) /
               (1000 * 60 * 60 * 24) !=
-              -1
-            ) {
-              fetch(`http://localhost:3000/attendence`, {
-                method: "POST",
+            -1
+          ) {
+            fetch(`http://localhost:3000/attendence`, {
+              method: "POST",
+              body: JSON.stringify({
+                id: "",
+                userId: element["id"],
+                date: increaseDate(element["lastAttended"]),
+                inDate: "NONE",
+                attendState: "Abscent",
+                outDate: "NONE",
+              }),
+              headers: { "Content-Type": "application/json" },
+            }).then(() => {
+              fetch(`http://localhost:3000/persons/${element["id"]}`, {
+                method: "PATCH",
                 body: JSON.stringify({
-                  id: "",
-                  userId: element["id"],
-                  date: increaseDate(element["lastAttended"]),
-                  inDate: "NONE",
-                  attendState: "Abscent",
-                  outDate: "NONE",
+                  lastAttended: increaseDate(element["lastAttended"]),
+                  employeeStatus: false,
                 }),
                 headers: { "Content-Type": "application/json" },
-              }).then(() => {
-                fetch(`http://localhost:3000/persons/${element["id"]}`, {
-                  method: "PATCH",
-                  body: JSON.stringify({
-                    lastAttended: increaseDate(element["lastAttended"]),
-                    employeeStatus: false,
-                  }),
-                  headers: { "Content-Type": "application/json" },
-                });
               });
-            }
+            });
           }
         }
       });
@@ -296,19 +537,19 @@ export function securityFetch() {
               '<button class="d-none btn-primary rounded-1">Attend</button><button class="d-none btn-primary rounded-1">Logout</button><span class="d-none text-dark fs-6">Already Attended today</span>';
             if (
               element["lastAttended"] !=
-              new Date().toLocaleDateString().replaceAll("/", "-") &&
+                new Date().toLocaleDateString().replaceAll("/", "-") &&
               element["employeeStatus"] == false
             )
               td3.children[0].classList.remove("d-none");
             else if (
               element["lastAttended"] ==
-              new Date().toLocaleDateString().replaceAll("/", "-") &&
+                new Date().toLocaleDateString().replaceAll("/", "-") &&
               element["employeeStatus"] == true
             )
               td3.children[1].classList.remove("d-none");
             else if (
               element["lastAttended"] ==
-              new Date().toLocaleDateString().replaceAll("/", "-") &&
+                new Date().toLocaleDateString().replaceAll("/", "-") &&
               element["employeeStatus"] == false
             )
               td3.children[2].classList.remove("d-none");
@@ -391,12 +632,31 @@ export function securityFetch() {
                     fetch(
                       `http://localhost:3000/attendence?date=${new Date()
                         .toLocaleDateString()
-                        .replaceAll("/", "-")}&userId=${caller.target.parentElement.parentElement.children[0]
-                        .innerText
+                        .replaceAll("/", "-")}&userId=${
+                        caller.target.parentElement.parentElement.children[0]
+                          .innerText
                       }`
                     )
                       .then((data) => data.json())
                       .then((foundObject) => {
+                        let newObject = {
+                          outDate: new Date().toLocaleTimeString(),
+                        };
+                        if (
+                          new Date().getHours() < 15 ||
+                          (new Date().getHours() == 15 &&
+                            new Date().getMinutes() < 30)
+                        ) {
+                          var minutesDifference = Math.abs(
+                            new Date().getTime() - new Date().setHours(15, 30)
+                          );
+                          var minutes = Math.floor(
+                            minutesDifference / 1000 / 60
+                          );
+                          newObject.excuse = `${Math.floor(minutes / 60)}H:${
+                            minutes - Math.floor(minutes / 60) * 60
+                          }M`;
+                        }
                         fetch(
                           `http://localhost:3000/attendence/${foundObject[0]["id"]}`,
                           {
@@ -404,9 +664,7 @@ export function securityFetch() {
                             headers: {
                               "Content-type": "application/json; charset=UTF-8",
                             },
-                            body: JSON.stringify({
-                              outDate: new Date().toLocaleTimeString(),
-                            }),
+                            body: JSON.stringify(newObject),
                           }
                         );
                       });
@@ -657,13 +915,27 @@ export function adminFetch() {
                       document
                         .getElementsByTagName("tbody")[1]
                         .appendChild(cloned);
+                      document.getElementsByTagName("tbody")[3].appendChild(tr);
                     }
                     if (element["attendState"] == "Abscent") {
                       document
                         .getElementsByTagName("tbody")[2]
                         .appendChild(cloned);
+                      document.getElementsByTagName("tbody")[3].appendChild(tr);
                     }
-                    document.getElementsByTagName("tbody")[3].appendChild(tr);
+                    if (element["excuse"]) {
+                      let td7 = document.createElement("td");
+                      td7.innerHTML =
+                        td6.innerHTML +
+                        `<button class="badge bg-info" disabled>Excuse</button>`;
+                      td6.innerText = element["excuse"];
+                      tr.appendChild(td7);
+                      let cloned2 = tr.cloneNode(true);
+                      document
+                        .getElementsByTagName("tbody")[5]
+                        .appendChild(cloned2);
+                      document.getElementsByTagName("tbody")[3].appendChild(tr);
+                    }
                   });
                 }
               }
@@ -671,8 +943,16 @@ export function adminFetch() {
               tableFinalization("lateReport");
               tableFinalization("absenceReport");
               tableFinalization("admitTable");
+              tableFinalization("excuseReport");
               tableFinalization("employeesData", false);
               forLoopRange(1, 3, successData);
+              addRangeButtons(5);
+              rangerFilterApply(5, successData);
+              $(".dtr-control").on("click", () => {
+                $(".child").remove();
+                $(".parent").removeClass("parent");
+                $(".dt-hasChild").removeClass("dt-hasChild");
+              });
             });
         });
       addName();
@@ -758,7 +1038,7 @@ function rangerFilterApply(tableNumber, successData) {
       let days = [];
       picker.on("before:click", function (target) {
         let targetDay = new Date(+target.getAttribute("data-time")).getTime();
-        days.push(targetDay);
+        if (targetDay != 0) days.push(targetDay);
         if (days.length == 2) {
           let foundObjects = [];
           $(`table:eq(${tableNumber})`).DataTable().destroy();
@@ -805,6 +1085,20 @@ function rangerFilterApply(tableNumber, successData) {
                 }
                 break;
               }
+              case 5: {
+                if (elementInSuccessData.excuse) {
+                  let currentDate = new Date(
+                    elementInSuccessData.date
+                  ).getTime();
+                  if (
+                    currentDate >= StartingDateOfRange &&
+                    currentDate <= EndingDateOfRange
+                  ) {
+                    foundObjects.push(elementInSuccessData);
+                  }
+                }
+                break;
+              }
             }
           });
           foundObjects.forEach((element) => {
@@ -847,169 +1141,23 @@ function rangerFilterApply(tableNumber, successData) {
                 break;
               }
             }
+            if (element["excuse"]) {
+              let temp =
+                td6.innerHTML +
+                `<button class="badge bg-info" disabled>Excuse</button>`;
+              td6.innerText = temp;
+            }
             document.getElementsByTagName("tbody")[tableNumber].appendChild(tr);
           });
           tableFinalization(
             document
               .getElementsByTagName("table")
-            [tableNumber].getAttribute("id")
+              [tableNumber].getAttribute("id")
           );
           addRangeButtons(tableNumber);
           rangerFilterApply(tableNumber, successData);
           days = [];
         }
-        // if (picker.datePicked.length == 0) {
-        //   $(`table:eq(${tableNumber})`).DataTable().destroy();
-        //   $(`tbody:eq(${tableNumber})`).html("");
-        //   successData.forEach((element) => {
-        //     switch (tableNumber) {
-        //       case 1: {
-        //         if (element.attendState == "Late") {
-        //           let tr = document.createElement("tr");
-        //           let td0 = document.createElement("td");
-        //           let td1 = document.createElement("td");
-        //           let td2 = document.createElement("td");
-        //           let td3 = document.createElement("td");
-        //           let td4 = document.createElement("td");
-        //           let td5 = document.createElement("td");
-        //           let td6 = document.createElement("td");
-        //           tr.appendChild(td0);
-        //           tr.appendChild(td1);
-        //           tr.appendChild(td2);
-        //           tr.appendChild(td3);
-        //           tr.appendChild(td4);
-        //           tr.appendChild(td5);
-        //           tr.appendChild(td6);
-        //           td0.innerText = element["userId"];
-        //           td1.innerText = mappedData.find(
-        //             (mapped) => mapped["id"] == element["userId"]
-        //           )["firstName"];
-        //           td2.innerText = mappedData.find(
-        //             (mapped) => mapped["id"] == element["userId"]
-        //           )["lastName"];
-        //           td3.innerText = element["date"];
-        //           td4.innerText = element["inDate"];
-        //           td5.innerText = element["outDate"];
-        //           switch (element["attendState"]) {
-        //             case "On Time": {
-        //               td6.innerHTML = `<button class="badge bg-success" disabled>${element["attendState"]}</button>`;
-        //               break;
-        //             }
-        //             case "Late": {
-        //               td6.innerHTML = `<button class="badge bg-danger" disabled>${element["attendState"]}</button>`;
-        //               break;
-        //             }
-        //             case "Abscent": {
-        //               td6.innerHTML = `<button class="badge bg-warning" disabled>${element["attendState"]}</button>`;
-        //               break;
-        //             }
-        //           }
-        //           document
-        //             .getElementsByTagName("tbody")
-        //             [tableNumber].appendChild(tr);
-        //         }
-        //       }
-        //       case 2: {
-        //         if (element.attendState == "Abscent") {
-        //           let tr = document.createElement("tr");
-        //           let td0 = document.createElement("td");
-        //           let td1 = document.createElement("td");
-        //           let td2 = document.createElement("td");
-        //           let td3 = document.createElement("td");
-        //           let td4 = document.createElement("td");
-        //           let td5 = document.createElement("td");
-        //           let td6 = document.createElement("td");
-        //           tr.appendChild(td0);
-        //           tr.appendChild(td1);
-        //           tr.appendChild(td2);
-        //           tr.appendChild(td3);
-        //           tr.appendChild(td4);
-        //           tr.appendChild(td5);
-        //           tr.appendChild(td6);
-        //           td0.innerText = element["userId"];
-        //           td1.innerText = mappedData.find(
-        //             (mapped) => mapped["id"] == element["userId"]
-        //           )["firstName"];
-        //           td2.innerText = mappedData.find(
-        //             (mapped) => mapped["id"] == element["userId"]
-        //           )["lastName"];
-        //           td3.innerText = element["date"];
-        //           td4.innerText = element["inDate"];
-        //           td5.innerText = element["outDate"];
-        //           switch (element["attendState"]) {
-        //             case "On Time": {
-        //               td6.innerHTML = `<button class="badge bg-success" disabled>${element["attendState"]}</button>`;
-        //               break;
-        //             }
-        //             case "Late": {
-        //               td6.innerHTML = `<button class="badge bg-danger" disabled>${element["attendState"]}</button>`;
-        //               break;
-        //             }
-        //             case "Abscent": {
-        //               td6.innerHTML = `<button class="badge bg-warning" disabled>${element["attendState"]}</button>`;
-        //               break;
-        //             }
-        //           }
-        //           document
-        //             .getElementsByTagName("tbody")
-        //             [tableNumber].appendChild(tr);
-        //         }
-        //       }
-        //       case 3: {
-        //         let tr = document.createElement("tr");
-        //         let td0 = document.createElement("td");
-        //         let td1 = document.createElement("td");
-        //         let td2 = document.createElement("td");
-        //         let td3 = document.createElement("td");
-        //         let td4 = document.createElement("td");
-        //         let td5 = document.createElement("td");
-        //         let td6 = document.createElement("td");
-        //         tr.appendChild(td0);
-        //         tr.appendChild(td1);
-        //         tr.appendChild(td2);
-        //         tr.appendChild(td3);
-        //         tr.appendChild(td4);
-        //         tr.appendChild(td5);
-        //         tr.appendChild(td6);
-        //         td0.innerText = element["userId"];
-        //         td1.innerText = mappedData.find(
-        //           (mapped) => mapped["id"] == element["userId"]
-        //         )["firstName"];
-        //         td2.innerText = mappedData.find(
-        //           (mapped) => mapped["id"] == element["userId"]
-        //         )["lastName"];
-        //         td3.innerText = element["date"];
-        //         td4.innerText = element["inDate"];
-        //         td5.innerText = element["outDate"];
-        //         switch (element["attendState"]) {
-        //           case "On Time": {
-        //             td6.innerHTML = `<button class="badge bg-success" disabled>${element["attendState"]}</button>`;
-        //             break;
-        //           }
-        //           case "Late": {
-        //             td6.innerHTML = `<button class="badge bg-danger" disabled>${element["attendState"]}</button>`;
-        //             break;
-        //           }
-        //           case "Abscent": {
-        //             td6.innerHTML = `<button class="badge bg-warning" disabled>${element["attendState"]}</button>`;
-        //             break;
-        //           }
-        //         }
-        //         document
-        //           .getElementsByTagName("tbody")
-        //           [tableNumber].appendChild(tr);
-        //       }
-        //     }
-        //   });
-        //   tableFinalization(
-        //     document
-        //       .getElementsByTagName("table")
-        //       [tableNumber].getAttribute("id")
-        //   );
-        //   addRangeButtons(tableNumber);
-        //   rangerFilterApply(tableNumber, successData);
-        //   days = [];
-        // }
       });
     },
   });
@@ -1022,7 +1170,7 @@ export function checkTime() {
       confirmButtonText: "Ok",
     }).then((result) => {
       if (result.isConfirmed) {
-        location.assign("http://127.0.0.1:5500/hompage.html");
+        location.assign("http://127.0.0.1:5500/homepage.html");
       }
     });
   }
@@ -1056,7 +1204,10 @@ export function homepageSignup() {
                     body: JSON.stringify(objSent),
                     headers: { "Content-Type": "application/json" },
                   })
-                    .then(() => $("#successRegisterMsg").removeClass("d-none"))
+                    .then(() => {
+                      $("#successRegisterMsg").removeClass("d-none");
+                      alert("Registered Successfully");
+                    })
                     .catch((error) => console.log("Error" + error));
                 } else {
                   $("#alreadyPending").removeClass("d-none");
@@ -1083,7 +1234,6 @@ export function homepageLogin() {
         logged = true;
         $("#errorMsg").addClass("d-none");
         $("#successMsg").removeClass("d-none");
-
         localStorage.setItem(
           "userInfo",
           CryptoJS.AES.encrypt(JSON.stringify(successData[0]), "AmrAllam")

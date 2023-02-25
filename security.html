@@ -23,6 +23,19 @@
     <script src="js/dataTables.responsive.min.js"></script>
     <script src="js/security.js" type="module"></script>
 </head>
+<script>
+    if (
+  !localStorage.getItem("userInfo") ||
+  JSON.parse(
+    CryptoJS.AES.decrypt(localStorage.userInfo, "AmrAllam").toString(
+      CryptoJS.enc.Utf8
+    )
+  )["type"] != 'security'
+) {
+  alert("You have no access");
+  location.assign("http://127.0.0.1:5500/homepage.html");
+}
+</script>
 <body>
     <div id="navDiv" class="row justify-content-evenly justify-content-md-around p-1 bg-primary">
         <div class="col col-md-1 text-start d-none d-md-flex p-2 lh-base">
